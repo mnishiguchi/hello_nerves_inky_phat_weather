@@ -23,7 +23,7 @@ defmodule NervesInkyPhatWeatherExample.MixProject do
   def application do
     [
       mod: {NervesInkyPhatWeatherExample.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :inets]
     ]
   end
 
