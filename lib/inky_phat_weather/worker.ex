@@ -13,15 +13,7 @@ defmodule InkyPhatWeather.Worker do
 
   @impl GenServer
   def init(_opts) do
-    {:ok, %InkyPhatWeather.Core{}, {:continue, :init_icons}}
-  end
-
-  @impl GenServer
-  def handle_continue(:init_icons, state) do
-    icons = InkyPhatWeather.Core.init_icons!()
-    Logger.info("#{@log_label}: Icons initialized")
-
-    {:noreply, %{state | icons: icons}, {:continue, :load_font}}
+    {:ok, %InkyPhatWeather.Core{}, {:continue, :load_font}}
   end
 
   @impl GenServer
@@ -29,7 +21,15 @@ defmodule InkyPhatWeather.Worker do
     chisel_font = InkyPhatWeather.Font.load!("6x13")
     Logger.info("#{@log_label}: Font loaded")
 
-    {:noreply, %{state | chisel_font: chisel_font}, {:continue, :start_inky}}
+    {:noreply, %{state | chisel_font: chisel_font}, {:continue, :init_icons}}
+  end
+
+  @impl GenServer
+  def handle_continue(:init_icons, state) do
+    icons = InkyPhatWeather.Icons.for_inky()
+    Logger.info("#{@log_label}: Icons initialized")
+
+    {:noreply, %{state | icons: icons}, {:continue, :start_inky}}
   end
 
   @impl GenServer

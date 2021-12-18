@@ -34,17 +34,4 @@ defmodule InkyPhatWeather.Weather do
       kv -> kv
     end)
   end
-
-  # Some possible weather descriptions:
-  # https://github.com/chubin/wttr.in/blob/master/lib/constants.py
-  def get_icon_name(weather_desc) do
-    cond do
-      String.match?(weather_desc, ~r/sun|clear/i) -> "sun"
-      String.match?(weather_desc, ~r/cloud|overcast/i) -> "cloud"
-      String.match?(weather_desc, ~r/thunder/i) -> "storm"
-      String.match?(weather_desc, ~r/snow|sleet/i) -> "snow"
-      String.match?(weather_desc, ~r/rain|shower/i) -> "rain"
-      true -> nil
-    end
-  end
 end
