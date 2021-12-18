@@ -43,6 +43,7 @@ defmodule NervesInkyPhatWeatherExample.MixProject do
       {:nerves_pack, "~> 0.6.0", targets: @all_targets},
       {:chisel, "~> 0.2.0", targets: @all_targets},
       {:inky, github: "mnishiguchi/inky", branch: "mnishiguchi/ssd1608", targets: @all_targets},
+      {:nerves_time_zones, "~> 0.1.0", targets: @all_targets},
 
       # Dependencies for specific targets
       # NOTE: It's generally low risk and recommended to follow minor version

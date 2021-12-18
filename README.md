@@ -32,14 +32,17 @@ To start your Nerves app:
 ## Dependencies
 
 - [chisel](https://hex.pm/packages/chisel)
-  - use bitmap fonts
+  - to use bitmap fonts
 - [inky](https://hex.pm/packages/inky)
-  - drive the Inky eInk displays
+  - to drive the Inky eInk displays
   - this example uses [my fork](https://github.com/mnishiguchi/inky/tree/mnishiguchi/ssd1608) because the library does not support latest Inky PHAT device.
 - [jason](https://hex.pm/packages/jason)
   - JSON parser
 - [httpoison](https://hex.pm/packages/httpoison)
   - HTTP client
+- [nerves_time_zones](https://hex.pm/packages/nerves_time_zones)
+  - to use local time
+  - Specify your time zone in `config.config`
 
 ## Icons
 

@@ -26,6 +26,11 @@ config :nerves, source_date_epoch: "1639782571"
 
 config :logger, backends: [RingLogger]
 
+# Local time and time zones
+# See https://hexdocs.pm/nerves_time_zones for details.
+
+config :nerves_time_zones, default_time_zone: "America/New_York"
+
 if Mix.target() == :host or Mix.target() == :"" do
   import_config "host.exs"
 else
