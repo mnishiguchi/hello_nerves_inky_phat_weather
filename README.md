@@ -4,9 +4,7 @@
 
 [Inky pHAT](https://shop.pimoroni.com/products/inky-phat) is an electronic paper (ePaper / eInk / EPD) display for [Raspberry Pi](https://www.raspberrypi.org/).
 
-Let's do something similar to [Pimoroni's Inky pHAT weather example](https://learn.pimoroni.com/article/getting-started-with-inky-phat#weather-example) in [Elixir](https://elixir-lang.org/).
-
-
+Let's do something similar to [Pimoroni's Inky pHAT weather example](https://learn.pimoroni.com/article/getting-started-with-inky-phat#weather-example) in [Elixir](https://elixir-lang.org/) and [Nerves](https://hexdocs.pm/nerves/getting-started.html).
 
 ## Targets
 
