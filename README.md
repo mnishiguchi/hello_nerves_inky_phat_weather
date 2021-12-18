@@ -1,6 +1,12 @@
 # NervesInkyPhatWeatherExample
 
-**TODO: Add description**
+![20211217_115119](https://user-images.githubusercontent.com/7563926/146623097-445833c7-a37a-44f1-a893-3a83a6337328.jpg)
+
+[Inky pHAT](https://shop.pimoroni.com/products/inky-phat) is an electronic paper (ePaper / eInk / EPD) display for [Raspberry Pi](https://www.raspberrypi.org/).
+
+Let's do something similar to [Pimoroni's Inky pHAT weather example](https://learn.pimoroni.com/article/getting-started-with-inky-phat#weather-example) in [Elixir](https://elixir-lang.org/).
+
+
 
 ## Targets
 
@@ -22,6 +28,31 @@ To start your Nerves app:
   * Install dependencies with `mix deps.get`
   * Create firmware with `mix firmware`
   * Burn to an SD card with `mix firmware.burn`
+
+## Dependencies
+
+- [chisel](https://hex.pm/packages/chisel)
+  - use bitmap fonts
+- [inky](https://hex.pm/packages/inky)
+  - drive the Inky eInk displays
+  - this example uses [my fork](https://github.com/mnishiguchi/inky/tree/mnishiguchi/ssd1608) because the library does not support latest Inky PHAT device.
+- [jason](https://hex.pm/packages/jason)
+  - JSON parser
+- [httpc](https://www.erlang.org/doc/man/httpc.html)
+  - HTTP client
+
+## Icons
+
+- Icons are adopted from [https://github.com/pimoroni/inky](https://github.com/pimoroni/inky/tree/fc17026df35447c1147e9bfa38988e89e75c80e6/examples/phat/resources)
+- The original icons were PNG, but I converted them into pixels so that I can use them easily in my code.
+- I used [pixels](https://hex.pm/packages/pixels) package as a tool for converting PNG into pixels.
+## Weather
+
+- Weather info is fetched from https://wttr.in/?format=j1
+
+## Fonts
+
+- Fonts are fetched from https://github.com/olikraus/u8g2/tree/master/tools/font/bdf
 
 ## Learn more
 
