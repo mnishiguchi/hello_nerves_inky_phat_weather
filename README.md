@@ -38,7 +38,7 @@ To start your Nerves app:
   - this example uses [my fork](https://github.com/mnishiguchi/inky/tree/mnishiguchi/ssd1608) because the library does not support latest Inky PHAT device.
 - [jason](https://hex.pm/packages/jason)
   - JSON parser
-- [httpc](https://www.erlang.org/doc/man/httpc.html)
+- [httpoison](https://hex.pm/packages/httpoison)
   - HTTP client
 
 ## Icons

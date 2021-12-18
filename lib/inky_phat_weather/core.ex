@@ -36,11 +36,15 @@ defmodule InkyPhatWeather.Core do
   end
 
   def refresh_pixels!(state) do
+    state = maybe_fetch_and_assign_weather(state)
+
     clear_pixels(state)
     maybe_set_weather_pixels(state)
     set_current_time_pixels(state)
-    set_icon(state)
+    maybe_set_icon(state)
     push_pixels(state)
+
+    state
   end
 
   defp set_current_time_pixels(state) do
@@ -49,23 +53,33 @@ defmodule InkyPhatWeather.Core do
     |> print_text({10, 10}, :black, [size_x: 2, size_y: 3], state)
   end
 
-  defp maybe_set_weather_pixels(%{last_weather: nil} = state), do: state
-
-  defp maybe_set_weather_pixels(%{last_weather: last_weather} = state) do
-    """
-    #{last_weather["weatherDesc"]}
-    Feels like #{last_weather["FeelsLikeF"]}°
-    """
-    |> print_text({10, 64}, :black, [size_x: 2, size_y: 2], state)
-
-    state
+  defp maybe_fetch_and_assign_weather(state) do
+    # Fetch every 30 minutes
+    if is_nil(state.last_weather) or DateTime.utc_now().minute in [0, 30] do
+      %{state | last_weather: InkyPhatWeather.Weather.get_current_weather()}
+    else
+      state
+    end
   end
 
-  defp set_icon(state) do
-    icon_name =
-      state.last_weather
-      |> Access.fetch!("weatherDesc")
-      |> InkyPhatWeather.Weather.get_icon_name()
+  defp maybe_set_weather_pixels(%{last_weather: nil} = _state), do: :ignore
+
+  defp maybe_set_weather_pixels(%{last_weather: last_weather} = state) do
+    %{"weatherDesc" => weather_desc, "FeelsLikeF" => feel_like_f} = last_weather
+
+    """
+    #{weather_desc}
+    Feels like #{feel_like_f}°
+    """
+    |> print_text({10, 64}, :black, [size_x: 2, size_y: 2], state)
+  end
+
+  defp maybe_set_icon(%{last_weather: nil} = _state), do: :ignore
+
+  defp maybe_set_icon(%{last_weather: last_weather} = state) do
+    %{"weatherDesc" => weather_desc} = last_weather
+
+    icon_name = InkyPhatWeather.Weather.get_icon_name(weather_desc)
 
     if icon_name do
       Inky.set_pixels(state.inky_pid, Access.fetch!(state.icons, icon_name), push: :skip)

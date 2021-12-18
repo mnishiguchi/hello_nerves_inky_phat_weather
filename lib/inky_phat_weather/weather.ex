@@ -3,6 +3,7 @@ defmodule InkyPhatWeather.Weather do
 
   require Logger
 
+  @log_label "InkyPhatWeather.Weather"
   @weather_url "https://wttr.in/?format=j1"
   @weather_keys [
     "FeelsLikeC",
@@ -18,7 +19,7 @@ defmodule InkyPhatWeather.Weather do
     fetch_current_weather!()
   rescue
     e ->
-      Logger.error(inspect(e))
+      Logger.error("#{@log_label}: #{inspect(e)}")
       nil
   end
 
