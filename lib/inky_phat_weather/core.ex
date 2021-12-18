@@ -35,15 +35,23 @@ defmodule InkyPhatWeather.Core do
     }
   end
 
-  def set_current_time_pixels(state) do
+  def refresh_pixels!(state) do
+    clear_pixels(state)
+    maybe_set_weather_pixels(state)
+    set_current_time_pixels(state)
+    set_icon(state)
+    push_pixels(state)
+  end
+
+  defp set_current_time_pixels(state) do
     NaiveDateTime.local_now()
     |> Calendar.strftime("%Y-%m-%d %I:%M %p")
     |> print_text({10, 10}, :black, [size_x: 2, size_y: 3], state)
   end
 
-  def maybe_set_weather_pixels(%{last_weather: nil} = state), do: state
+  defp maybe_set_weather_pixels(%{last_weather: nil} = state), do: state
 
-  def maybe_set_weather_pixels(%{last_weather: last_weather} = state) do
+  defp maybe_set_weather_pixels(%{last_weather: last_weather} = state) do
     """
     #{last_weather["weatherDesc"]}
     Feels like #{last_weather["FeelsLikeF"]}°
@@ -53,19 +61,22 @@ defmodule InkyPhatWeather.Core do
     state
   end
 
-  def set_icon(state) do
-    icon_name = InkyPhatWeather.Weather.get_icon_name(state.last_weather["weatherDesc"])
+  defp set_icon(state) do
+    icon_name =
+      state.last_weather
+      |> Access.fetch!("weatherDesc")
+      |> InkyPhatWeather.Weather.get_icon_name()
 
     if icon_name do
       Inky.set_pixels(state.inky_pid, Access.fetch!(state.icons, icon_name), push: :skip)
     end
   end
 
-  def clear_pixels(state) do
+  defp clear_pixels(state) do
     Inky.set_pixels(state.inky_pid, fn _x, _y, _w, _h, _pixels -> :white end, push: :skip)
   end
 
-  def print_text(text, {x, y}, color, opts, state) do
+  defp print_text(text, {x, y}, color, opts, state) do
     put_pixels_fun = fn x, y ->
       Inky.set_pixels(state.inky_pid, %{{x, y} => color}, push: :skip)
     end
@@ -73,7 +84,7 @@ defmodule InkyPhatWeather.Core do
     Chisel.Renderer.draw_text(text, x, y, state.chisel_font, put_pixels_fun, opts)
   end
 
-  def push_pixels(state) do
+  defp push_pixels(state) do
     Inky.set_pixels(state.inky_pid, %{}, push: :await)
   end
 end

@@ -34,6 +34,8 @@ defmodule InkyPhatWeather.Worker do
 
   @impl GenServer
   def handle_continue(:start_inky, state) do
+    unless state.chisel_font, do: raise("Font is not yet loaded")
+
     {:ok, inky_pid} = Inky.start_link(:phat_ssd1608, :black)
     Logger.info("#{@log_label}: Started Inky server")
 
@@ -51,11 +53,11 @@ defmodule InkyPhatWeather.Worker do
     Process.send_after(self(), :tick, :timer.seconds(1))
 
     # Refresh pixels only when the second is zero
-    if DateTime.utc_now().second() == 0 do
-      {:noreply,
-       state
-       |> maybe_fetch_and_assign_weather()
-       |> refresh_pixels!()}
+    if DateTime.utc_now().second == 0 do
+      state = state |> maybe_fetch_and_assign_weather()
+      InkyPhatWeather.Core.refresh_pixels!(state)
+
+      {:noreply, state}
     else
       {:noreply, state}
     end
@@ -63,7 +65,7 @@ defmodule InkyPhatWeather.Worker do
 
   defp maybe_fetch_and_assign_weather(state) do
     # Fetch every 30 minutes
-    if is_nil(state.last_weather) or DateTime.utc_now().minute() in [0, 30] do
+    if is_nil(state.last_weather) or DateTime.utc_now().minute in [0, 30] do
       last_weather = InkyPhatWeather.Weather.fetch_current_weather!()
       %{state | last_weather: last_weather}
     else
@@ -71,23 +73,8 @@ defmodule InkyPhatWeather.Worker do
     end
   end
 
-  defp refresh_pixels!(state) do
-    # Ignore if font is missing
-    if state.chisel_font do
-      InkyPhatWeather.Core.clear_pixels(state)
-      InkyPhatWeather.Core.maybe_set_weather_pixels(state)
-      InkyPhatWeather.Core.set_current_time_pixels(state)
-      InkyPhatWeather.Core.set_icon(state)
-      InkyPhatWeather.Core.push_pixels(state)
-
-      Logger.info("#{@log_label}: Refreshed pixels")
-    end
-
-    state
-  end
-
   defp wait_until_zero_second() do
-    if DateTime.utc_now().second() == 0 do
+    if DateTime.utc_now().second == 0 do
       Logger.info("#{@log_label}: Zero second")
       :ok
     else
