@@ -1,6 +1,8 @@
 defmodule InkyPhatWeather.Weather do
   @moduledoc false
 
+  require Logger
+
   @weather_url "https://wttr.in/?format=j1"
   @weather_keys [
     "FeelsLikeC",
@@ -12,17 +14,23 @@ defmodule InkyPhatWeather.Weather do
     "weatherDesc"
   ]
 
-  def fetch_current_weather!() do
-    {:ok, {{_, 200, _}, _headers, body}} = :httpc.request(@weather_url)
+  def get_current_weather() do
+    fetch_current_weather!()
+  rescue
+    e ->
+      Logger.error(inspect(e))
+      nil
+  end
 
-    body
-    |> List.to_string()
-    |> Jason.decode!()
-    |> Access.fetch!("current_condition")
-    |> hd()
+  def fetch_current_weather!() do
+    %HTTPoison.Response{status_code: 200, body: body} = HTTPoison.get!(@weather_url)
+    [current_weather] = body |> Jason.decode!() |> Access.fetch!("current_condition")
+
+    current_weather
     |> Map.take(@weather_keys)
-    |> Map.new(fn {k, v} ->
-      {k, format_weather_value(v)}
+    |> Map.new(fn
+      {k, [%{"value" => v}]} -> {k, v}
+      kv -> kv
     end)
   end
 
@@ -38,7 +46,4 @@ defmodule InkyPhatWeather.Weather do
       true -> nil
     end
   end
-
-  defp format_weather_value([%{"value" => value}]), do: value
-  defp format_weather_value(value), do: value
 end

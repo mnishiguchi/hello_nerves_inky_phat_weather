@@ -66,7 +66,7 @@ defmodule InkyPhatWeather.Worker do
   defp maybe_fetch_and_assign_weather(state) do
     # Fetch every 30 minutes
     if is_nil(state.last_weather) or DateTime.utc_now().minute in [0, 30] do
-      last_weather = InkyPhatWeather.Weather.fetch_current_weather!()
+      last_weather = InkyPhatWeather.Weather.get_current_weather()
       %{state | last_weather: last_weather}
     else
       state
