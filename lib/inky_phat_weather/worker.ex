@@ -13,7 +13,7 @@ defmodule InkyPhatWeather.Worker do
 
   @impl GenServer
   def init(_opts) do
-    {:ok, %InkyPhatWeather.Core{}, {:continue, :load_font}}
+    {:ok, %InkyPhatWeather.Display{}, {:continue, :load_font}}
   end
 
   @impl GenServer
@@ -51,7 +51,7 @@ defmodule InkyPhatWeather.Worker do
 
     # Refresh pixels only when the second is zero
     if DateTime.utc_now().second == 0 do
-      {:noreply, InkyPhatWeather.Core.refresh_pixels!(state)}
+      {:noreply, InkyPhatWeather.Display.refresh_pixels!(state)}
     else
       {:noreply, state}
     end

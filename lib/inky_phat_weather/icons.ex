@@ -300,8 +300,12 @@ defmodule InkyPhatWeather.Icons do
     |> Enum.into(%{})
   end
 
-  # Some possible weather descriptions:
-  # https://github.com/chubin/wttr.in/blob/master/lib/constants.py
+  @doc """
+  Determines an icon name based on the provided weather description.
+
+  Some possible weather descriptions:
+  https://github.com/chubin/wttr.in/blob/master/lib/constants.py
+  """
   def get_icon_name_for_weather(weather_description) do
     cond do
       String.match?(weather_description, ~r/sun|clear/i) -> :sun
