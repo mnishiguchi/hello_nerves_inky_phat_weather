@@ -26,10 +26,10 @@ defmodule InkyPhatWeather.Worker do
 
   @impl GenServer
   def handle_continue(:init_icons, state) do
-    icons = InkyPhatWeather.Icons.for_inky()
+    InkyPhatWeather.Icons.start_link()
     Logger.info("#{@log_label}: Icons initialized")
 
-    {:noreply, %{state | icons: icons}, {:continue, :start_inky}}
+    {:noreply, state, {:continue, :start_inky}}
   end
 
   @impl GenServer

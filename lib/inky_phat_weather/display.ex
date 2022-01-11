@@ -1,7 +1,7 @@
 defmodule InkyPhatWeather.Display do
   @moduledoc false
 
-  defstruct ~w[chisel_font inky_pid last_weather icons]a
+  defstruct ~w[chisel_font inky_pid last_weather]a
 
   def refresh_pixels!(state) do
     state = maybe_fetch_and_assign_weather(state)
@@ -42,14 +42,11 @@ defmodule InkyPhatWeather.Display do
     end
   end
 
-  def weather_icon(%{last_weather: last_weather, icons: icons}) do
+  def weather_icon(%{last_weather: last_weather}) do
     if not is_nil(last_weather) do
       %{"weatherDesc" => weather_desc} = last_weather
-      icon_name = InkyPhatWeather.Icons.get_icon_name_for_weather(weather_desc)
-
-      if not is_nil(icon_name) do
-        Access.fetch!(icons, icon_name)
-      end
+      icon_name = InkyPhatWeather.Icons.get_weather_icon_name(weather_desc)
+      InkyPhatWeather.Icons.get(icon_name)
     end
   end
 
