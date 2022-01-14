@@ -4,15 +4,28 @@ defmodule InkyPhatWeather.Display do
   defstruct ~w[chisel_font inky_pid last_weather]a
 
   def refresh_pixels!(state) do
-    state = maybe_fetch_and_assign_weather(state)
-
-    clear_pixels(state)
-    current_time_text() |> print_text({10, 10}, :black, [size_x: 2, size_y: 3], state)
-    weather_template(state) |> print_text({10, 64}, :black, [size_x: 2, size_y: 2], state)
-    weather_icon(state) |> print_icon(state)
-    push_pixels(state)
-
     state
+    |> maybe_fetch_and_assign_weather()
+    |> clear_pixels()
+    |> buffer_current_time_pixels()
+    |> buffer_weather_pixels()
+    |> buffer_icon_pixels()
+    |> push_pixels()
+    |> struct!(last_weather: nil)
+  end
+
+  defp buffer_current_time_pixels(state) do
+    current_time_text()
+    |> set_text_pixels({10, 10}, :black, [size_x: 2, size_y: 3], state)
+  end
+
+  defp buffer_weather_pixels(state) do
+    weather_template(state)
+    |> set_text_pixels({10, 64}, :black, [size_x: 2, size_y: 2], state)
+  end
+
+  defp buffer_icon_pixels(state) do
+    set_icon_pixels(weather_icon(state), state)
   end
 
   ## View
@@ -65,21 +78,25 @@ defmodule InkyPhatWeather.Display do
 
   defp clear_pixels(state) do
     Inky.set_pixels(state.inky_pid, fn _x, _y, _w, _h, _pixels -> :white end, push: :skip)
+    state
   end
 
-  defp print_text(text, {x, y}, color, opts, state) do
+  defp set_text_pixels(text, {x, y}, color, opts, state) do
     put_pixels_fun = fn x, y ->
       Inky.set_pixels(state.inky_pid, %{{x, y} => color}, push: :skip)
     end
 
     Chisel.Renderer.draw_text(text, x, y, state.chisel_font, put_pixels_fun, opts)
+    state
   end
 
-  def print_icon(icon_pixels, state) do
+  def set_icon_pixels(icon_pixels, state) do
     Inky.set_pixels(state.inky_pid, icon_pixels, push: :skip)
+    state
   end
 
   defp push_pixels(state) do
     Inky.set_pixels(state.inky_pid, %{}, push: :await)
+    state
   end
 end
