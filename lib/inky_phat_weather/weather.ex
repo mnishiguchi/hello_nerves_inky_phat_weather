@@ -24,8 +24,8 @@ defmodule InkyPhatWeather.Weather do
   end
 
   def fetch_current_weather!() do
-    %HTTPoison.Response{status_code: 200, body: body} = HTTPoison.get!(@weather_url)
-    [current_weather] = body |> Jason.decode!() |> Access.fetch!("current_condition")
+    %Req.Response{status: 200, body: body} = Req.get!(@weather_url)
+    [current_weather] = body |> Access.fetch!("current_condition")
 
     current_weather
     |> Map.take(@weather_keys)
