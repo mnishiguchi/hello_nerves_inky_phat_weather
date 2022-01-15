@@ -34,9 +34,7 @@ To start your Nerves app:
 - [inky](https://hex.pm/packages/inky)
   - to drive the Inky eInk displays
   - this example uses [my fork](https://github.com/mnishiguchi/inky/tree/mnishiguchi/ssd1608) because the library does not support latest Inky PHAT device.
-- [jason](https://hex.pm/packages/jason)
-  - JSON parser
-- [httpoison](https://hex.pm/packages/httpoison)
+- [req](https://hex.pm/packages/req)
   - HTTP client
 - [nerves_time_zones](https://hex.pm/packages/nerves_time_zones)
   - to use local time
