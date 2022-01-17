@@ -322,9 +322,10 @@ defmodule InkyPhatWeather.Icons do
       row
       |> Enum.with_index()
       |> Enum.map(fn
-        {0, index_x} -> {{index_x + offset_x, index_y + offset_y}, :white}
-        {_, index_x} -> {{index_x + offset_x, index_y + offset_y}, :black}
+        {1, index_x} -> {{index_x + offset_x, index_y + offset_y}, :black}
+        _ -> nil
       end)
+      |> Enum.reject(&is_nil(&1))
     end)
     |> Enum.into(%{})
   end
