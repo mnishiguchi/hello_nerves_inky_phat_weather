@@ -3,6 +3,7 @@ defmodule InkyPhatWeather.Display do
 
   defstruct ~w[chisel_font inky_pid last_weather]a
 
+  @spec refresh_pixels!(struct()) :: struct()
   def refresh_pixels!(state) do
     state
     |> maybe_fetch_and_assign_weather()
@@ -14,18 +15,24 @@ defmodule InkyPhatWeather.Display do
     |> struct!(last_weather: nil)
   end
 
+  @spec buffer_current_time_pixels(struct()) :: struct()
   defp buffer_current_time_pixels(state) do
     current_time_text()
     |> set_text_pixels({10, 10}, :black, [size_x: 2, size_y: 3], state)
   end
 
+  @spec buffer_weather_pixels(struct()) :: struct()
   defp buffer_weather_pixels(state) do
     weather_template(state)
     |> set_text_pixels({10, 64}, :black, [size_x: 2, size_y: 2], state)
   end
 
+  @spec buffer_icon_pixels(struct()) :: struct()
   defp buffer_icon_pixels(state) do
-    set_icon_pixels(weather_icon(state), state)
+    case weather_icon(state) do
+      nil -> state
+      icon -> set_icon_pixels(icon, state)
+    end
   end
 
   ## View
@@ -42,24 +49,30 @@ defmodule InkyPhatWeather.Display do
   end
 
   def weather_description_text(%{last_weather: last_weather}) do
-    if not is_nil(last_weather) do
+    if last_weather do
       %{"weatherDesc" => weather_desc} = last_weather
       weather_desc |> String.split(",") |> List.first()
+    else
+      "-"
     end
   end
 
   def feels_like_f_text(%{last_weather: last_weather}) do
-    if not is_nil(last_weather) do
+    if last_weather do
       %{"FeelsLikeF" => feel_like_f} = last_weather
       "Feels like #{feel_like_f}°F"
+    else
+      "-"
     end
   end
 
   def weather_icon(%{last_weather: last_weather}) do
-    if not is_nil(last_weather) do
+    if last_weather do
       %{"weatherDesc" => weather_desc} = last_weather
       icon_name = InkyPhatWeather.Icons.get_weather_icon_name(weather_desc)
       InkyPhatWeather.Icons.get(icon_name)
+    else
+      nil
     end
   end
 
