@@ -1,8 +1,8 @@
-defmodule NervesInkyPhatWeatherExampleTest do
+defmodule HelloNervesInkyPhatWeatherTest do
   use ExUnit.Case
-  doctest NervesInkyPhatWeatherExample
+  doctest HelloNervesInkyPhatWeather
 
   test "greets the world" do
-    assert NervesInkyPhatWeatherExample.hello() == :world
+    assert HelloNervesInkyPhatWeather.hello() == :world
   end
 end

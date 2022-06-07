@@ -1,11 +1,11 @@
-defmodule InkyPhatWeather.Worker do
+defmodule HelloNervesInkyPhatWeather.Worker do
   @moduledoc false
 
   use GenServer, restart: :transient
 
   require Logger
 
-  @log_label "InkyPhatWeather"
+  @log_label "HelloNervesInkyPhatWeather"
 
   def start_link(opts \\ []) do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
@@ -13,12 +13,12 @@ defmodule InkyPhatWeather.Worker do
 
   @impl GenServer
   def init(_opts) do
-    {:ok, %InkyPhatWeather.Display{}, {:continue, :load_font}}
+    {:ok, %HelloNervesInkyPhatWeather.Display{}, {:continue, :load_font}}
   end
 
   @impl GenServer
   def handle_continue(:load_font, state) do
-    chisel_font = InkyPhatWeather.Font.load!("6x13")
+    chisel_font = HelloNervesInkyPhatWeather.Font.load!("6x13")
     Logger.info("#{@log_label}: Font loaded")
 
     {:noreply, %{state | chisel_font: chisel_font}, {:continue, :init_icons}}
@@ -26,7 +26,7 @@ defmodule InkyPhatWeather.Worker do
 
   @impl GenServer
   def handle_continue(:init_icons, state) do
-    InkyPhatWeather.Icons.start_link()
+    HelloNervesInkyPhatWeather.Icons.start_link()
     Logger.info("#{@log_label}: Icons initialized")
 
     {:noreply, state, {:continue, :start_inky}}
@@ -51,7 +51,7 @@ defmodule InkyPhatWeather.Worker do
 
     # Refresh pixels only when the second is zero
     if DateTime.utc_now().second == 0 do
-      {:noreply, InkyPhatWeather.Display.refresh_pixels!(state)}
+      {:noreply, HelloNervesInkyPhatWeather.Display.refresh_pixels!(state)}
     else
       {:noreply, state}
     end

@@ -1,4 +1,4 @@
-defmodule InkyPhatWeather.Font do
+defmodule HelloNervesInkyPhatWeather.Font do
   @moduledoc false
 
   @fonts_dir "/data/fonts"

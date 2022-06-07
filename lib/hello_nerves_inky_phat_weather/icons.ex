@@ -1,4 +1,4 @@
-defmodule InkyPhatWeather.Icons do
+defmodule HelloNervesInkyPhatWeather.Icons do
   @moduledoc false
 
   @pixels %{

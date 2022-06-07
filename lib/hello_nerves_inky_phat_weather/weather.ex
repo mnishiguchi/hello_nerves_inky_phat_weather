@@ -1,9 +1,9 @@
-defmodule InkyPhatWeather.Weather do
+defmodule HelloNervesInkyPhatWeather.Weather do
   @moduledoc false
 
   require Logger
 
-  @log_label "InkyPhatWeather.Weather"
+  @log_label "HelloNervesInkyPhatWeather.Weather"
   @weather_url "https://wttr.in/?format=j1"
   @weather_keys [
     "FeelsLikeC",

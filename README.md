@@ -1,4 +1,4 @@
-# NervesInkyPhatWeatherExample
+# HelloNervesInkyPhatWeather
 
 ![20211217_115119](https://user-images.githubusercontent.com/7563926/146623097-445833c7-a37a-44f1-a893-3a83a6337328.jpg)
 

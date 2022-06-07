@@ -1,8 +1,8 @@
-defmodule NervesInkyPhatWeatherExample.MixProject do
+defmodule HelloNervesInkyPhatWeather.MixProject do
   use Mix.Project
 
-  @app :nerves_inky_phat_weather_example
-  @version "0.1.0"
+  @app :hello_nerves_inky_phat_weather
+  @version "0.2.0"
   @all_targets [:rpi, :rpi0, :rpi2, :rpi3, :rpi3a, :rpi4, :bbb, :osd32mp1, :x86_64]
 
   def project do
@@ -22,7 +22,7 @@ defmodule NervesInkyPhatWeatherExample.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {NervesInkyPhatWeatherExample.Application, []},
+      mod: {HelloNervesInkyPhatWeather.Application, []},
       extra_applications: [:logger, :runtime_tools, :inets]
     ]
   end

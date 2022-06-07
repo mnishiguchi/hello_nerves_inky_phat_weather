@@ -8,7 +8,7 @@ import Config
 # Enable the Nerves integration with Mix
 Application.start(:nerves_bootstrap)
 
-config :nerves_inky_phat_weather_example, target: Mix.target()
+config :hello_nerves_inky_phat_weather, target: Mix.target()
 
 # Customize non-Elixir parts of the firmware. See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.

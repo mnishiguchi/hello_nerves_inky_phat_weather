@@ -1,4 +1,4 @@
-defmodule InkyPhatWeather.Display do
+defmodule HelloNervesInkyPhatWeather.Display do
   @moduledoc false
 
   defstruct ~w[chisel_font inky_pid last_weather]a
@@ -69,8 +69,8 @@ defmodule InkyPhatWeather.Display do
   def weather_icon(%{last_weather: last_weather}) do
     if last_weather do
       %{"weatherDesc" => weather_desc} = last_weather
-      icon_name = InkyPhatWeather.Icons.get_weather_icon_name(weather_desc)
-      InkyPhatWeather.Icons.get(icon_name)
+      icon_name = HelloNervesInkyPhatWeather.Icons.get_weather_icon_name(weather_desc)
+      HelloNervesInkyPhatWeather.Icons.get(icon_name)
     else
       nil
     end
@@ -81,7 +81,7 @@ defmodule InkyPhatWeather.Display do
   defp maybe_fetch_and_assign_weather(state) do
     # Fetch every 30 minutes
     if is_nil(state.last_weather) or DateTime.utc_now().minute in [0, 30] do
-      %{state | last_weather: InkyPhatWeather.Weather.get_current_weather()}
+      %{state | last_weather: HelloNervesInkyPhatWeather.Weather.get_current_weather()}
     else
       state
     end
