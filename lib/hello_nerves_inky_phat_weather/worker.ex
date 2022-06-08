@@ -18,7 +18,7 @@ defmodule HelloNervesInkyPhatWeather.Worker do
 
   @impl GenServer
   def handle_continue(:load_font, state) do
-    chisel_font = HelloNervesInkyPhatWeather.Font.load!("6x13")
+    chisel_font = HelloNervesInkyPhatWeather.Font.load!("6x13.bdf")
     Logger.info("#{@log_label}: Font loaded")
 
     {:noreply, %{state | chisel_font: chisel_font}, {:continue, :init_icons}}

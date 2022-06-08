@@ -16,6 +16,7 @@ defmodule HelloNervesInkyPhatWeather.Application do
         # Children for all targets
         # Starts a worker by calling: HelloNervesInkyPhatWeather.Worker.start_link(arg)
         # {HelloNervesInkyPhatWeather.Worker, arg},
+        HelloNervesInkyPhatWeather.Font,
         HelloNervesInkyPhatWeather.Worker
       ] ++ children(target())
 
