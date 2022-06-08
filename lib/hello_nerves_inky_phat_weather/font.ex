@@ -64,8 +64,8 @@ defmodule HelloNervesInkyPhatWeather.Font do
   end
 
   defp download_raw_font!(font_name) do
-    {:ok, {{_, 200, _}, _headers, body}} = :httpc.request(raw_font_remote_url(font_name))
-    :ok = File.write(raw_font_file(font_name), List.to_string(body))
+    %Req.Response{status: 200, body: body} = Req.get!(raw_font_remote_url(font_name))
+    :ok = File.write(raw_font_file(font_name), body)
   end
 
   defp raw_font_file(bdf_font_name) do
