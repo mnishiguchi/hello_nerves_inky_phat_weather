@@ -5,7 +5,7 @@ defmodule HelloNervesInkyPhatWeather.Font do
 
   use Agent
 
-  @fonts_dir "/data/fonts"
+  @fonts_dir "/fonts"
   @fonts_remote_base_url "https://raw.githubusercontent.com/olikraus/u8g2/master/tools/font/bdf"
 
   def start_link(_opts \\ []) do

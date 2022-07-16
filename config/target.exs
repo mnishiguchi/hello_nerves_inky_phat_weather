@@ -4,24 +4,24 @@ import Config
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
 
-config :shoehorn,
-  init: [:nerves_runtime, :nerves_pack],
-  app: Mix.Project.config()[:app]
+config :shoehorn, init: [:nerves_runtime, :nerves_pack]
 
-# Nerves Runtime can enumerate hardware devices and send notifications via
-# SystemRegistry. This slows down startup and not many programs make use of
-# this feature.
+# Use Ringlogger as the logger backend and remove :console.
+# See https://hexdocs.pm/ring_logger/readme.html for more information on
+# configuring ring_logger.
 
-config :nerves_runtime, :kernel, use_system_registry: false
+config :logger, backends: [RingLogger]
 
 # Erlinit can be configured without a rootfs_overlay. See
 # https://github.com/nerves-project/erlinit/ for more information on
 # configuring erlinit.
 
-config :nerves,
-  erlinit: [
-    hostname_pattern: "nerves-%s"
-  ]
+# Save a short report on shutdowns just in case it wasn't intentional
+config :nerves, :erlinit, shutdown_report: "/data/last_shutdown.txt"
+
+# Advance the timestamp as soon as possible to get the date closer
+# to the real one especially on RTC-less devices.
+config :nerves, :erlinit, update_clock: true
 
 # Configure the device for SSH IEx prompt access and firmware updates
 #
@@ -48,6 +48,9 @@ config :nerves_ssh,
   authorized_keys: Enum.map(keys, &File.read!/1)
 
 # Configure the network using vintage_net
+#
+# Update regulatory_domain to your 2-letter country code E.g., "US"
+#
 # See https://github.com/nerves-networking/vintage_net for more information
 config :vintage_net,
   regulatory_domain: "US",
@@ -62,17 +65,24 @@ config :vintage_net,
   ]
 
 config :mdns_lite,
-  # The `host` key specifies what hostnames mdns_lite advertises.  `:hostname`
-  # advertises the device's hostname.local. For the official Nerves systems, this
-  # is "nerves-<4 digit serial#>.local".  mdns_lite also advertises
-  # "nerves.local" for convenience. If more than one Nerves device is on the
-  # network, delete "nerves" from the list.
+  instance_name: "mnishiguchi HelloNervesInkyPhatWeather",
 
-  host: [:hostname, "nerves"],
+  # Use MdnsLite's DNS bridge feature to support mDNS resolution in Erlang
+  dns_bridge_enabled: true,
+  dns_bridge_port: 53,
+  dns_bridge_recursive: false,
+
+  # Respond to "nerves-1234.local` and "nerves.local"
+  hosts: [:hostname, "nerves"],
   ttl: 120,
 
   # Advertise the following services over mDNS.
   services: [
+    %{
+      protocol: "http",
+      transport: "tcp",
+      port: 80
+    },
     %{
       protocol: "ssh",
       transport: "tcp",
@@ -89,6 +99,16 @@ config :mdns_lite,
       port: 4369
     }
   ]
+
+# Common VintageNet configuration
+#
+# See bbb.exs, rpi0.exs, etc. for device-specific configuration.
+#
+# regulatory_domain - 00 (global), change to "US", etc.
+# additional_name_servers - Set to try mdns_lite's DNS bridge first
+config :vintage_net,
+  regulatory_domain: "US",
+  additional_name_servers: [{127, 0, 0, 53}]
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
